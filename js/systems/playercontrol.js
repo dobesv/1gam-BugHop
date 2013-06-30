@@ -178,7 +178,7 @@ PlayerControlSystem = pc.systems.EntitySystem.extend('PlayerControlSystem',
           playerPhysics.setCollisionMask(
               (linearVelocity.x != 0 || moveX != 0 ? COLLIDE_WALL : 0) |
               (linearVelocity.y >= -1 ? COLLIDE_FLOOR|COLLIDE_MUSHROOM : 0) |
-              COLLIDE_ENEMY|COLLIDE_PICKUP
+              COLLIDE_ENEMY|COLLIDE_PICKUP|COLLIDE_CUTSCENE
           );
         }
 

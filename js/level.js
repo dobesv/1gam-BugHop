@@ -57,7 +57,7 @@
                  "y":1815
                 }, 
                 {
-                 "height":254,
+                 "height":14,
                  "name":"Starting Cave Floor",
                  "properties":
                     {
@@ -67,8 +67,8 @@
                  "type":"floor",
                  "visible":true,
                  "width":346,
-                 "x":2,
-                 "y":1102
+                 "x":-2,
+                 "y":1114
                 }, 
                 {
                  "height":62,
@@ -85,7 +85,7 @@
                  "y":1363
                 }, 
                 {
-                 "height":462,
+                 "height":780,
                  "name":"Wall Under Ledge",
                  "properties":
                     {
@@ -94,9 +94,9 @@
                  "rotation":0,
                  "type":"wall",
                  "visible":true,
-                 "width":52,
-                 "x":309,
-                 "y":1424
+                 "width":44,
+                 "x":291,
+                 "y":1132
                 }, 
                 {
                  "height":82,
@@ -892,8 +892,8 @@
                  "type":"cutscene1",
                  "visible":true,
                  "width":86,
-                 "x":920,
-                 "y":1647
+                 "x":736,
+                 "y":1795
                 }, 
                 {
                  "height":170,
@@ -936,6 +936,20 @@
                  "width":132,
                  "x":3030,
                  "y":1689
+                }, 
+                {
+                 "height":80,
+                 "name":"",
+                 "properties":
+                    {
+
+                    },
+                 "rotation":0,
+                 "type":"cutscene2",
+                 "visible":true,
+                 "width":88,
+                 "x":734,
+                 "y":1800
                 }],
          "opacity":1,
          "type":"objectgroup",

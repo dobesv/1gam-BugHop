@@ -5,6 +5,7 @@ var COLLIDE_FLOOR=4;
 var COLLIDE_ENEMY=8;
 var COLLIDE_PICKUP=16;
 var COLLIDE_MUSHROOM=32;
+var COLLIDE_CUTSCENE=64;
 
 /**
  * GameScene
@@ -91,8 +92,18 @@ GameScene = pc.Scene.extend('GameScene',
             b.getComponent('sprite').sprite.setAnimation('bounce');
             playSound('bounce');
           }
-          if(b.hasComponentOfType('pickup'))
+          else if(b.hasComponentOfType('pickup'))
             this.pickupSystem.onTouch(a, b);
+          else if(b.hasTag('cutscene'))
+          {
+            if(this.playingCutscene == null &&
+                !(b.hasTag('cutscene2') && this.player.getComponent('player').orbsCollected < 20))
+            {
+              var sc = b.getComponent('sprite');
+              sc.active = true;
+              this.playingCutscene = b;
+            }
+          }
         }
       },
 
@@ -228,13 +239,22 @@ GameScene = pc.Scene.extend('GameScene',
             sprite.sprite.setAnimation('idle');
             ent.addTag('bouncer');
             ent.addTag('jump_through');
-          } else if(type == 'cutscene1') {
-            sprite.sprite.setAnimation('intro');
-            this.playingCutscene = ent;
-            spatial.pos.x -= 512;
-            spatial.pos.x -= 225;
-            spatial.dim.x = 1024;
-            spatial.dim.y = 450;
+          } else if(type == 'cutscene1' || type == 'cutscene2') {
+            spatial.pos.x = x;
+            spatial.pos.y = y;
+            spatial.dim.x = shape.x;
+            spatial.dim.y = shape.y;
+            ent.addComponent(pc.components.Physics.create({
+              immovable:true,
+              sensorOnly:true,
+              collisionGroup:COLLIDE_CUTSCENE,
+              collisionCategory:COLLIDE_CUTSCENE,
+              collisionMask:COLLIDE_PLAYER
+            }));
+            sprite.active = false;
+            sprite.sprite.setAnimation('cutscene');
+            ent.addTag('cutscene');
+
           } else if(type == 'orb') {
             ent.addComponent(pc.components.Physics.create({
               gravity:{x:0,y:0},
