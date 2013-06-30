@@ -17,7 +17,11 @@ TheGame = pc.Game.extend('TheGame',
           pc.device.loader.setDisableCache();
 
         // no resources are loaded in this template, so this is all commented out
-        ['bg-all.jpg'].forEach(loadImage);
+        ['bg-all.jpg',
+         'title_screen.jpg',
+         'but-start-up.png',
+         'but-start-down.png',
+         'but-start-hover.png'].forEach(loadImage);
         for(var i=0; i < 10; i++) { loadImage('digits/'+i+'.png')}
         setupAnims();
 
@@ -48,13 +52,9 @@ TheGame = pc.Game.extend('TheGame',
         var ctx = pc.device.ctx;
         ctx.clearRect(0, 0, pc.device.canvasWidth, pc.device.canvasHeight);
 
-        // create the game scene (notice we do it here AFTER the resources are loaded)
-        this.gameScene = new GameScene();
-        this.addScene(this.gameScene, true);
-
         // create the menu scene (but don't make it active)
-//        this.menuScene = new MenuScene();
-//        this.addScene(this.menuScene, true);
+        this.menuScene = new MenuScene();
+        this.addScene(this.menuScene);
 //
 //        playSound('rain1', 1, true);
 //        playSound('music1', 1, true);
@@ -76,7 +76,7 @@ TheGame = pc.Game.extend('TheGame',
             break;
           case 'startGame':
           case 'restart':
-            //this.deactivateScene(this.menuScene);
+            this.deactivateScene(this.menuScene);
             if(this.gameScene) {
               this.deactivateScene(this.gameScene);
               console.log('old scene: '+this.gameScene+"  ... "+this.gameScene.gameLayer+"   "+this.gameScene.player);

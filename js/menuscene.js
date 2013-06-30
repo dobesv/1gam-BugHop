@@ -11,10 +11,11 @@ MenuScene = pc.Scene.extend('MenuScene',
       titleButtons:[
         {
           action:'startGame',
-          x:517, y:288, w:null, h:null,
-          imageId:'menu_button_start',
-          image:null,
-          entity:null
+          x:700, y:600, w:null, h:null,
+          imageId:'but-start-',
+          images:{up:null, down:null, hover:null},
+          entity:null,
+          spriteSheet:null
         }
       ],
 
@@ -26,13 +27,15 @@ MenuScene = pc.Scene.extend('MenuScene',
         this.menuItems = [];
         this.currentMenuSelection = 0;
 
-        var bgLayer= this.bgLayer = this.addLayer(new ImageLayer('title_screen', 0));
+        var bgLayer= this.bgLayer = this.addLayer(new pc.ImageLayer('menu bg', getImage('title_screen'), 0));
         bgLayer.fitTo(pc.device.canvasWidth, pc.device.canvasHeight);
+        bgLayer.setZIndex(1);
 
         //-----------------------------------------------------------------------------
         // menu layer
         //-----------------------------------------------------------------------------
-        var menuLayer = this.menuLayer = this.addLayer(new pc.EntityLayer('menu layer', 10000, 10000));
+        var menuLayer = this.menuLayer = this.addLayer(new pc.EntityLayer('menu'));
+        menuLayer.setZIndex(10);
 
         // render system to draw text etc
         this.menuLayer.addSystem(new pc.systems.Render());
@@ -40,7 +43,10 @@ MenuScene = pc.Scene.extend('MenuScene',
 
         this.titleButtons.forEach(function(but) {
           var ent = but.entity = pc.Entity.create(menuLayer);
-          var img = but.image = getImage(but.imageId);
+          ['up', 'down', 'hover'].forEach(function(state) {
+            but.images[state] = getImage(but.imageId+state);
+          });
+          var img = but.images.up;
           but.w = img.width;
           but.h = img.height;
           ent.addComponent(pc.components.Spatial.create(but));
@@ -48,8 +54,9 @@ MenuScene = pc.Scene.extend('MenuScene',
             actions: [[but.action, ['MOUSE_BUTTON_LEFT_DOWN', 'TOUCH'], true]],
             target: this
           }));
-          var ss = new pc.SpriteSheet({image:img});
+          var ss = but.spriteSheet = new pc.SpriteSheet({image:img});
           ent.addComponent(pc.components.Sprite.create({spriteSheet:ss}));
+          //ent.addComponent(pc.components.Rect.create({color:[255,255,0]}));
         }, this);
         pc.device.input.bindAction(this, 'up', 'MOUSE_BUTTON_LEFT_UP');
         pc.device.input.bindAction(this, 'down', 'MOUSE_BUTTON_LEFT_DOWN');
@@ -68,6 +75,7 @@ MenuScene = pc.Scene.extend('MenuScene',
           if(sp.getScreenRect().containsPoint(pos)) {
             sp.pos.x += 2;
             sp.pos.y += 2;
+            but.spriteSheet.image = but.images.down;
             this.currentButtonDown = but;
           }
         }, this);
@@ -75,6 +83,7 @@ MenuScene = pc.Scene.extend('MenuScene',
 
       onMouseUp:function(pos) {
         if(this.currentButtonDown) {
+          this.currentButtonDown.spriteSheet.image = this.currentButtonDown.images.up;
           var sp = this.currentButtonDown.entity.getComponent('spatial');
           sp.pos.x = this.currentButtonDown.x;
           sp.pos.y = this.currentButtonDown.y;
@@ -98,14 +107,5 @@ MenuScene = pc.Scene.extend('MenuScene',
             this.onMouseUp(pos);
             break;
         }
-      },
-
-      process:function ()
-      {
-        // clear the background
-        // pc.device.ctx.clearRect(0, 0, pc.device.canvasWidth, pc.device.canvasHeight);
-        // always call the super
-        this._super();
       }
-
     });
